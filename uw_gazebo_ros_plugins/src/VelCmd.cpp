@@ -1,6 +1,7 @@
 #include <iostream>
 #include <uw_gazebo_ros_plugins/VelCmd.h>
 #include <ros/ros.h>
+#include <ignition/math/Vector3.hh>
 
 #include <gazebo/common/Plugin.hh>
 
@@ -99,11 +100,11 @@ namespace gazebo
           //this->model_->SetWorldPose(pose);
           //world_->SetPaused(is_paused);
 
-          this->model_->SetLinearVel(math::Vector3(linear_vel_.x, 
+          this->model_->SetLinearVel(ignition::math::Vector3<double>(linear_vel_.x, 
                                                    linear_vel_.y, 
                                                    linear_vel_.z));
           
-          this->model_->SetAngularVel(math::Vector3(angular_vel_.x,
+          this->model_->SetAngularVel(ignition::math::Vector3<double>(angular_vel_.x,
                                                     angular_vel_.y,
                                                     angular_vel_.z));                    
      }

@@ -1,0 +1,59 @@
+<launch>
+
+  <!-- load world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+
+    <arg name="world_name" value="$(find gtri_based_sonar_gazebo)/worlds/basement_pool.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="true"/>
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <!-- load URDF into parameter server -->
+  <param name="robot_description"
+	 command="$(find xacro)/xacro '$(find gtri_based_sonar_gazebo)/urdf/sonar_robot.xacro'" />  
+
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+	args="-urdf -model g500arm5 -param robot_description -x -3.6 -y 0 -z 1" />
+
+  <!-- Keyboard Control -->
+  <rosparam ns="g500arm5" param="linear_mag">1.0</rosparam>
+  <rosparam ns="g500arm5" param="angular_mag">1.0</rosparam>
+  <rosparam ns="g500arm5" param="model_name">g500arm5</rosparam>  
+  <node ns="g500arm5" name="velocity_control_node" pkg="keyboard_teleop" 
+        type="velocity_control" respawn="false" output="screen" 
+        launch-prefix="xterm -e" />
+
+  <!-- Camera -->
+  <node pkg="image_view" name="image_view"  type="image_view" 
+        args="image:=/g500arm5/camera1/image_raw" />  
+
+   <!-- Horizontal Sonar Image Simulator -->
+  <node name="imaging_sonar_sim" pkg="imaging_sonar_sim" type="imaging_sonar_sim" output="screen">
+    <param name="sonar_link_name" type="string" value="sonar_link"/>
+    <param name="cloud_topic_name" type="string" value="sonar_cloud"/>
+    <param name="image_topic_name" type="string" value="sonar_image"/>
+  </node>
+
+  <!-- Horizontal Display sonar image -->
+  <node name="rqt_image_view_sonar_image" pkg="rqt_image_view" type="rqt_image_view" args="/sonar_image">
+  </node>
+  
+  <!-- Vertical Sonar Image Simulator -->
+  <node name="imaging_sonar_sim_vertical" pkg="imaging_sonar_sim" type="imaging_sonar_sim" output="screen">
+    <param name="sonar_link_name" type="string" value="sonar_vertical_link"/>
+    <param name="cloud_topic_name" type="string" value="sonar_vertical_cloud"/>
+    <param name="image_topic_name" type="string" value="sonar_vertical_image"/>
+  </node>
+
+  <!-- Vertical Display sonar image -->
+<!--
+  <node name="rqt_image_view_sonar_vertical_image" pkg="rqt_image_view" type="rqt_image_view" args="/sonar_vertical_image">
+  </node>
+-->
+  
+</launch>

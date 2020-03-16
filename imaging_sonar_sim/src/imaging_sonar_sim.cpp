@@ -8,7 +8,7 @@
 
 #include <opencv2/core/core.hpp>
 
-#include <opencv2/contrib/contrib.hpp>
+//#include <opencv2/contrib/contrib.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -64,7 +64,7 @@ sensor_msgs::CameraInfo camera_info_;
 
 //cv::VideoWriter record_;
 int frame_count = 0;
-std::string output_dir = "/home/syllogismrxs/temp/sonar";
+std::string output_dir = "/home/bruce/syllogismrxs/temp/sonar";
 
 #define PI 3.14159265359
 

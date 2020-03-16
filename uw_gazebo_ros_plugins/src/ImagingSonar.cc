@@ -49,8 +49,10 @@ ImagingSonar::ImagingSonar()
 /////////////////////////////////////////////////
 ImagingSonar::~ImagingSonar()
 {
-     this->parent_sensor_->GetLaserShape()->DisconnectNewLaserScans(
+/* deprecated
+     this->parent_sensor_->LaserShape()->DisconnectNewLaserScans(
           this->newLaserScansConnection);
+*/
      this->newLaserScansConnection.reset();
 
      this->parent_sensor_.reset();
@@ -66,19 +68,20 @@ void ImagingSonar::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
      
      // Get then name of the parent sensor
      this->parent_sensor_ =
-          boost::dynamic_pointer_cast<sensors::RaySensor>(_parent);
+//          boost::dynamic_pointer_cast<sensors::RaySensor>(_parent);
+          std::dynamic_pointer_cast<sensors::RaySensor>(_parent);
 
      if (!this->parent_sensor_)
           gzthrow("ImagingSonar requires a Ray Sensor as its parent");
 
-     this->world_ = physics::get_world(this->parent_sensor_->GetWorldName());
+     this->world_ = physics::get_world(this->parent_sensor_->WorldName());
 
      this->newLaserScansConnection =
-          this->parent_sensor_->GetLaserShape()->ConnectNewLaserScans(
+          this->parent_sensor_->LaserShape()->ConnectNewLaserScans(
                boost::bind(&ImagingSonar::OnNewLaserScans, this));
 
-     std::string worldName = _parent->GetWorldName();
-     last_update_time_ = this->world_->GetSimTime();
+     std::string worldName = _parent->WorldName();
+     last_update_time_ = this->world_->SimTime();
      this->node_ = transport::NodePtr(new transport::Node());
      this->node_->Init(worldName);
      
@@ -172,7 +175,7 @@ void ImagingSonar::LaserDisconnect()
 void ImagingSonar::OnNewLaserScans()
 {
      if (this->topic_name_ != "") {
-          common::Time sensor_update_time = this->parent_sensor_->GetLastUpdateTime();
+          common::Time sensor_update_time = this->parent_sensor_->LastUpdateTime();
           if (last_update_time_ < sensor_update_time) {
                //this->PutSonarImage(sensor_update_time);
                this->PutLaserData(sensor_update_time);
@@ -188,18 +191,18 @@ void ImagingSonar::PutSonarImage(common::Time &_updateTime)
      //cout << "New scan..." << endl;
      this->parent_sensor_->SetActive(false);
      
-     math::Angle maxAngle = this->parent_sensor_->GetAngleMax();
-     math::Angle minAngle = this->parent_sensor_->GetAngleMin();
+     ignition::math::Angle maxAngle = this->parent_sensor_->AngleMax();
+     ignition::math::Angle minAngle = this->parent_sensor_->AngleMin();
 
-     double maxRange = this->parent_sensor_->GetRangeMax();
-     double minRange = this->parent_sensor_->GetRangeMin();
-     int rayCount = this->parent_sensor_->GetRayCount();
-     int rangeCount = this->parent_sensor_->GetRangeCount();
+     double maxRange = this->parent_sensor_->RangeMax();
+     double minRange = this->parent_sensor_->RangeMin();
+     int rayCount = this->parent_sensor_->RayCount();
+     int rangeCount = this->parent_sensor_->RangeCount();
 
-     int verticalRayCount = this->parent_sensor_->GetVerticalRayCount();
-     int verticalRangeCount = this->parent_sensor_->GetVerticalRangeCount();
-     math::Angle verticalMaxAngle = this->parent_sensor_->GetVerticalAngleMax();
-     math::Angle verticalMinAngle = this->parent_sensor_->GetVerticalAngleMin();
+     int verticalRayCount = this->parent_sensor_->VerticalRayCount();
+     int verticalRangeCount = this->parent_sensor_->VerticalRangeCount();
+     ignition::math::Angle verticalMaxAngle = this->parent_sensor_->VerticalAngleMax();
+     ignition::math::Angle verticalMinAngle = this->parent_sensor_->VerticalAngleMin();
 
      double yDiff = maxAngle.Radian() - minAngle.Radian();
      double pDiff = verticalMaxAngle.Radian() - verticalMinAngle.Radian();
@@ -226,18 +229,18 @@ void ImagingSonar::PutLaserData(common::Time &_updateTime)
 
      this->parent_sensor_->SetActive(false);
 
-     math::Angle maxAngle = this->parent_sensor_->GetAngleMax();
-     math::Angle minAngle = this->parent_sensor_->GetAngleMin();
+     ignition::math::Angle maxAngle = this->parent_sensor_->AngleMax();
+     ignition::math::Angle minAngle = this->parent_sensor_->AngleMin();
 
-     double maxRange = this->parent_sensor_->GetRangeMax();
-     double minRange = this->parent_sensor_->GetRangeMin();
-     int rayCount = this->parent_sensor_->GetRayCount();
-     int rangeCount = this->parent_sensor_->GetRangeCount();
+     double maxRange = this->parent_sensor_->RangeMax();
+     double minRange = this->parent_sensor_->RangeMin();
+     int rayCount = this->parent_sensor_->RayCount();
+     int rangeCount = this->parent_sensor_->RangeCount();
 
-     int verticalRayCount = this->parent_sensor_->GetVerticalRayCount();
-     int verticalRangeCount = this->parent_sensor_->GetVerticalRangeCount();
-     math::Angle verticalMaxAngle = this->parent_sensor_->GetVerticalAngleMax();
-     math::Angle verticalMinAngle = this->parent_sensor_->GetVerticalAngleMin();
+     int verticalRayCount = this->parent_sensor_->VerticalRayCount();
+     int verticalRangeCount = this->parent_sensor_->VerticalRangeCount();
+     ignition::math::Angle verticalMaxAngle = this->parent_sensor_->VerticalAngleMax();
+     ignition::math::Angle verticalMinAngle = this->parent_sensor_->VerticalAngleMin();
 
      double yDiff = maxAngle.Radian() - minAngle.Radian();
      double pDiff = verticalMaxAngle.Radian() - verticalMinAngle.Radian();
@@ -301,10 +304,10 @@ void ImagingSonar::PutLaserData(common::Time &_updateTime)
                j3 = hja + vjb * rayCount;
                j4 = hjb + vjb * rayCount;
                // range readings of 4 corners
-               r1 = std::min(this->parent_sensor_->GetLaserShape()->GetRange(j1) , maxRange-minRange);
-               r2 = std::min(this->parent_sensor_->GetLaserShape()->GetRange(j2) , maxRange-minRange);
-               r3 = std::min(this->parent_sensor_->GetLaserShape()->GetRange(j3) , maxRange-minRange);
-               r4 = std::min(this->parent_sensor_->GetLaserShape()->GetRange(j4) , maxRange-minRange);      
+               r1 = std::min(this->parent_sensor_->LaserShape()->GetRange(j1) , maxRange-minRange);
+               r2 = std::min(this->parent_sensor_->LaserShape()->GetRange(j2) , maxRange-minRange);
+               r3 = std::min(this->parent_sensor_->LaserShape()->GetRange(j3) , maxRange-minRange);
+               r4 = std::min(this->parent_sensor_->LaserShape()->GetRange(j4) , maxRange-minRange);      
 
                // Range is linear interpolation if values are close,
                // and min if they are very different
@@ -312,10 +315,10 @@ void ImagingSonar::PutLaserData(common::Time &_updateTime)
                     +   vb *((1 - hb) * r3 + hb * r4);      
 
                // Intensity is averaged
-               intensity = 0.25*(this->parent_sensor_->GetLaserShape()->GetRetro(j1) +
-                                 this->parent_sensor_->GetLaserShape()->GetRetro(j2) +
-                                 this->parent_sensor_->GetLaserShape()->GetRetro(j3) +
-                                 this->parent_sensor_->GetLaserShape()->GetRetro(j4));                     
+               intensity = 0.25*(this->parent_sensor_->LaserShape()->GetRetro(j1) +
+                                 this->parent_sensor_->LaserShape()->GetRetro(j2) +
+                                 this->parent_sensor_->LaserShape()->GetRetro(j3) +
+                                 this->parent_sensor_->LaserShape()->GetRetro(j4));                     
 
                // std::cout << " block debug "
                //           << "  ij("<<i<<","<<j<<")"
@@ -329,10 +332,10 @@ void ImagingSonar::PutLaserData(common::Time &_updateTime)
 
                //if (j == 0 && i == 0) {
                //     cout << "========================" << endl;
-               //     cout << "Retro1: " << this->parent_sensor_->GetLaserShape()->GetRetro(j1) << endl;
-               //     cout << "Retro2: " << this->parent_sensor_->GetLaserShape()->GetRetro(j2) << endl;
-               //     cout << "Retro3: " << this->parent_sensor_->GetLaserShape()->GetRetro(j3) << endl;
-               //     cout << "Retro4: " << this->parent_sensor_->GetLaserShape()->GetRetro(j4) << endl;               
+               //     cout << "Retro1: " << this->parent_sensor_->LaserShape()->GetRetro(j1) << endl;
+               //     cout << "Retro2: " << this->parent_sensor_->LaserShape()->GetRetro(j2) << endl;
+               //     cout << "Retro3: " << this->parent_sensor_->LaserShape()->GetRetro(j3) << endl;
+               //     cout << "Retro4: " << this->parent_sensor_->LaserShape()->GetRetro(j4) << endl;               
                //     cout << "vb: " << vb << endl;
                //     cout << "hb: " << hb << endl;
                //     cout << "hja: " << hja << endl;
@@ -349,10 +352,10 @@ void ImagingSonar::PutLaserData(common::Time &_updateTime)
                //     cout << "r4: " << r4 << endl;
                //     cout << "r: " << r << endl;           
                //     cout << "intensity: " << intensity << endl;
-               //     cout << "Retro(j1): " << this->parent_sensor_->GetLaserShape()->GetRetro(j1) << endl;
-               //     cout << "Retro(j2): " << this->parent_sensor_->GetLaserShape()->GetRetro(j2) << endl;
-               //     cout << "Retro(j3): " << this->parent_sensor_->GetLaserShape()->GetRetro(j3) << endl;
-               //     cout << "Retro(j4): " << this->parent_sensor_->GetLaserShape()->GetRetro(j4) << endl;
+               //     cout << "Retro(j1): " << this->parent_sensor_->LaserShape()->GetRetro(j1) << endl;
+               //     cout << "Retro(j2): " << this->parent_sensor_->LaserShape()->GetRetro(j2) << endl;
+               //     cout << "Retro(j3): " << this->parent_sensor_->LaserShape()->GetRetro(j3) << endl;
+               //     cout << "Retro(j4): " << this->parent_sensor_->LaserShape()->GetRetro(j4) << endl;
                //     cout << "yAngle: " << yAngle << endl;
                //     cout << "pAngle: " << pAngle << endl;           
                //}
@@ -428,7 +431,12 @@ void ImagingSonar::OnStats( const boost::shared_ptr<msgs::WorldStatistics const>
 {
      this->sim_time_  = msgs::Convert( _msg->sim_time() );
 
+/* What?
      math::Pose pose;
      pose.pos.x = 0.5*sin(0.01*this->sim_time_.Double());
      gzdbg << "plugin simTime [" << this->sim_time_.Double() << "] update pose [" << pose.pos.x << "]\n";
+*/
+
+     auto x = 0.5*sin(0.01*this->sim_time_.Double());
+     gzdbg << "plugin simTime [" << this->sim_time_.Double() << "] update pose [" << x << "]\n";
 }

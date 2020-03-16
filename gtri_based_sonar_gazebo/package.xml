@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gtri_based_sonar_gazebo</name>
+  <version>0.0.1</version>
+  <description>The gtri_based_sonar_gazebo package</description>
+
+  <maintainer email="bdallen@nps.edu">Bruce Allen</maintainer>
+
+  <author email="bdallen@nps.edu">Bruce Allen</author>
+  
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
