@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find gtri_based_fls_gazebo)/worlds/gtri_based_blueview_basement_cylinder.world"/>
+  </include>
+
+  <!-- GUI viewer -->
+  <node name="rqt_images" pkg="rqt_gui" type="rqt_gui" output="screen" args = "--perspective-file $(find gtri_based_fls_gazebo)/config/sonar_images.perspective" />
+
+  <!-- rviz viewer -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find gtri_based_fls_gazebo)/config/fls.rviz" />
+
+</launch>

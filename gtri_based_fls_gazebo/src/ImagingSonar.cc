@@ -31,6 +31,8 @@
 
 #include <tf/tf.h>
 
+#include "cloud_to_image.h"
+
 #define EPSILON_DIFF 0.000001
 
 using namespace gazebo;
@@ -410,8 +412,11 @@ void ImagingSonar::PutLaserData(common::Time &_updateTime)
      }
      this->parent_sensor_->SetActive(true);
 
-     // send data out via ros message
+     // send data out via ros message sensor_msgs::PointCloud
      this->pub_.publish(this->cloud_msg_);
+
+     // prepare image from cloud_msg_
+     cloudCallback(cloud_msg_)
 }
 
 // Custom Callback Queue
