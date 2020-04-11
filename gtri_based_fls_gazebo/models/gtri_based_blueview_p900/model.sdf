@@ -66,12 +66,13 @@
           </range>
         </ray>
 
-        <plugin name="gazebo_ros_imaging_sonar_controller" filename="libimaging_sonar.so">
+        <plugin name="gazebo_ros_gtri_based_fls_plugin" filename="libgtri_based_fls_plugin.so">
           <alwaysOn>true</alwaysOn>
           <updateRate>30.0</updateRate>
-          <topicName>sonar_cloud</topicName>
+          <linkName>sonar_link</linkName>
           <frameName>sonar_link</frameName>
-
+          <cloudTopicName>sonar_cloud</cloudTopicName>
+          <imageTopicName>sonar_image</imageTopicName>
           <horizontalMinAngle>-0.39269875</horizontalMinAngle>
           <horizontalMaxAngle>0.39269875</horizontalMaxAngle>
           <imageOutputDir>/tmp</imageOutputDir>

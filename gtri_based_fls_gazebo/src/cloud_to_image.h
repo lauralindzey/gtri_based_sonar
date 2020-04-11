@@ -45,7 +45,10 @@
 #include <sensor_msgs/PointCloud.h>
 
 //namespace gazebo
-void init_cloud_to_image(const ros::NodeHandle* const n_,
+void init_cloud_to_image(ros::NodeHandle* n_,
                          const sdf::ElementPtr _sdf);
-void cloudCallback(const sensor_msgs::PointCloudConstPtr& msg);
+void publish_cloud_to_image(const sensor_msgs::PointCloud& msg,
+                            const ros::Publisher& camera_info_pub_,
+                            const ros::Publisher& image_pub_);
 #endif
+

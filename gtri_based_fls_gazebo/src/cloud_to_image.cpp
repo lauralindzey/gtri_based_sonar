@@ -6,6 +6,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>
 
+#include <sdf/sdf.hh>   /* sdf */
+
 #include <opencv2/core/core.hpp>
 
 //#include <opencv2/contrib/contrib.hpp>
@@ -52,12 +54,8 @@ namespace fs = boost::filesystem;
 using std::cout;
 using std::endl;
 
-sensor_msgs::PointCloud cloud_in_;
 sensor_msgs::PointCloud cloud_;
 
-image_transport::Publisher img_pub_;
-
-ros::Publisher camera_info_pub_;
 sensor_msgs::CameraInfo camera_info_;
 
 //cv::VideoWriter record_;
@@ -101,20 +99,21 @@ void add_salt_and_pepper(cv::Mat& I, int amt)
 }
 
 
-double min_angle_;
-double max_angle_;
+std::string image_topic_name = "";
+double min_angle_ = -1;
+double max_angle_ = 1;
 double beam_width_;
 
-std::string sonar_link_name;
+std::string sonar_link_name = "";
 
-void cloudCallback(const sensor_msgs::PointCloudConstPtr& msg)
+void publish_cloud_to_image(const sensor_msgs::PointCloud& msg,
+                            const ros::Publisher& camera_info_pub_,
+                            const ros::Publisher& image_pub_)
 {
-     cloud_in_ = *msg;
-
      tf::TransformListener listener;
      tf::StampedTransform transform;
      try{
-          listener.transformPointCloud(sonar_link_name, cloud_in_, cloud_);
+          listener.transformPointCloud(sonar_link_name, msg, cloud_);
      }
      catch (tf::TransformException ex){
           ROS_ERROR("%s",ex.what());
@@ -377,14 +376,17 @@ void cloudCallback(const sensor_msgs::PointCloudConstPtr& msg)
 
      camera_info_.header.stamp = img_header.stamp;
 
+     // publish camera info and image
      camera_info_pub_.publish(camera_info_);
-     img_pub_.publish(img_msg);
+     image_pub_.publish(img_msg);
 
+/*
      std::ostringstream convert;
      convert << frame_count;
 
      std::string out_str = output_dir + "/sonar" + convert.str() + ".png";
      cv::imwrite(out_str, img_color);
+*/
      frame_count++;
      //if (!record_.isOpened()) {
      //     record_.open("/home/syllogismrxs/output.avi", CV_FOURCC('M','J','P','G'), 10, img_color.size(), true);
@@ -395,54 +397,55 @@ void cloudCallback(const sensor_msgs::PointCloudConstPtr& msg)
      //}
 }
 
-void init_cloud_to_image(ros::NodeHandle* n_, sdf::ElementPtr _sdf)
+void init_cloud_to_image(ros::NodeHandle* n_, const sdf::ElementPtr _sdf)
 {
      srand (time(NULL));
 
-     ros::param::get("~sonar_link_name", sonar_link_name);
+     if (_sdf->HasElement("linkName"))
+          sonar_link_name = _sdf->GetElement("linkName")->Get<std::string>();
+     else
+          ROS_FATAL_STREAM("linkName is required.");
 
-     if (!_sdf->GetElement("horizontalMinAngle"))
+     if (_sdf->HasElement("imageTopicName"))
+          image_topic_name = _sdf->GetElement("imageTopicName")->Get<std::string>();
+     else
+          ROS_FATAL_STREAM("imageTopicName is required.");
+
+     if (_sdf->HasElement("horizontalMinAngle"))
+          min_angle_ = _sdf->GetElement("horizontalMinAngle")->Get<double>();
+     else
           ROS_FATAL_STREAM("horizontalMinAngle is required.");
-     else
-          min_angle = _sdf->GetElement("horizontal_min_angle")->Get<double>();
 
-     if (!_sdf->GetElement("horizontalMaxAngle"))
+     if (_sdf->HasElement("horizontalMaxAngle"))
+          max_angle_ = _sdf->GetElement("horizontalMaxAngle")->Get<double>();
+     else
           ROS_FATAL_STREAM("horizontalMaxAngle is required.");
-     else
-          max_angle = _sdf->GetElement("")->Get<double>();
 
-     if (!_sdf->GetElement("imageOutputDir"))
-          ROS_FATAL_STREAM("imageOutputDir is required.");
-     else
+     if (_sdf->HasElement("imageOutputDir"))
           output_dir = _sdf->GetElement("imageOutputDir")->Get<std::string>();
+     else
+          ROS_FATAL_STREAM("imageOutputDir is required.");
 
 
      cout << "Min Angle: " << min_angle_ << endl;
      cout << "Max Angle: " << max_angle_ << endl;
      beam_width_ = max_angle_ * 2;
 
-     std::string cloud_topic_name;
-     ros::param::get("~cloud_topic_name", cloud_topic_name);
-
+/* zz??
      // Setup sonar_image publication
-     std::string image_topic_name;
-     ros::param::get("~image_topic_name", image_topic_name);
-
      image_transport::ImageTransport it_(*n_);
      img_pub_ = it_.advertise(image_topic_name, 1);
+*/
 
-     cout << "=======" << endl;
-     cout << "cloud name: " << cloud_topic_name << endl;
-     cout << "image name: " << image_topic_name << endl;
+     cout << "image topic name: " << image_topic_name << endl;
      cout << "sonar link name: " << sonar_link_name << endl;
+     cout << "output directory: " << output_dir << endl;
 
-     camera_info_pub_ = n_->advertise<sensor_msgs::CameraInfo>("camera_info", 1);
-
+     /* this used to be called at 10 Hz
      ros::Rate loop_rate(10);
      while (ros::ok()) {
           ros::spinOnce();
           loop_rate.sleep();
      }
-
-     return 0;
+     */
 }

@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(gtri_based_fls)
 
 find_package(catkin REQUIRED COMPONENTS
-  gazebo_ros
   roscpp
   rospy
   std_msgs
@@ -12,13 +11,16 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   tf
-  pcl_ros
-  cmake_modules
 )
 
 find_package(gazebo REQUIRED)
 find_package(OpenCV)
-include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(
+  ${OpenCV_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIR} 
+  ${catkin_INCLUDE_DIRS} 
+  ${GAZEBO_INCLUDE_DIRS}
+)
 link_directories(${GAZEBO_LIBRARY_DIRS})
 
 catkin_package(
@@ -27,31 +29,13 @@ INCLUDE_DIRS
 DEPENDS
 )
 
-include_directories(include)
-include_directories(
-  ${Boost_INCLUDE_DIR} 
-  ${catkin_INCLUDE_DIRS} 
-  ${GAZEBO_INCLUDE_DIRS}
-)
+add_library(gtri_based_fls_plugin src/ImagingSonar.cc)
 
-set(IMAGING_SONAR_PLUGIN_NAME "gtri_based_fls")
+add_library(cloud_to_image src/cloud_to_image.cpp)
 
-add_library(${IMAGING_SONAR_PLUGIN_NAME} 
-  src/ImagingSonar.cc
-  )
+add_library(color_maps src/ColorMaps.cpp)
 
-add_library(cloud_to_iamge
-  src/cloud_to_image.cpp
-  )
-
-add_library(color_maps
-  src/ColorMaps.cpp
-  )
-
-add_dependencies(${IMAGING_SONAR_PLUGIN_NAME} 
-                 gtri_based_fls_generate_messages_cpp)
-
-target_link_libraries(${IMAGING_SONAR_PLUGIN_NAME}
+target_link_libraries(gtri_based_fls_plugin
   cloud_to_image color_maps
   ${catkin_LIBRARIES} 
   ${OpenCV_LIBRARIES}

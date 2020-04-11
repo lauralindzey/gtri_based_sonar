@@ -71,13 +71,22 @@ namespace gazebo
 
           /// \brief pointer to ros node
      private: ros::NodeHandle* rosnode_;
-     private: ros::Publisher pub_;
+     private: ros::Publisher point_cloud_pub_;
+     private: ros::Publisher camera_info_pub_;
+     private: ros::Publisher image_pub_;
 
           // \brief ros message
      private: sensor_msgs::PointCloud cloud_msg_;
 
-          /// \brief topic name
-    private: std::string topic_name_;
+          /// \brief cloud topic name
+    private: std::string cloud_topic_name_;
+
+          /// \brief camera info topic name
+    private: std::string camera_info_topic_name_;
+
+          /// \brief camera image topic name
+    private: std::string image_topic_name_;
+
       /// \brief frame transform name, should match link name
     private: std::string frame_name_;
           
