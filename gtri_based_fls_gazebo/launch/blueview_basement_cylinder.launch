@@ -5,10 +5,10 @@
     <arg name="world_name" value="$(find gtri_based_fls)/worlds/blueview_basement_cylinder.world"/>
   </include>
 
-  <!-- GUI viewer -->
-  <node name="rqt_images" pkg="rqt_gui" type="rqt_gui" output="screen" args = "--perspective-file $(find gtri_based_fls)/config/sonar_images.perspective" />
-
-  <!-- rviz viewer -->
-  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find gtri_based_fls)/config/fls.rviz" />
+  <!-- rqt_image_view for sonar_image -->
+  <node name="rqt_image_view_sonar" pkg="rqt_image_view"
+        type="rqt_image_view" args="/sonar_image">
+  </node>
 
 </launch>
+
