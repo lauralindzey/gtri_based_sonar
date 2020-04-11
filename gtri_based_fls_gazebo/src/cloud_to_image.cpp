@@ -111,7 +111,6 @@ void publish_cloud_to_image(const sensor_msgs::PointCloud& msg,
                             const ros::Publisher& image_pub_)
 {
      tf::TransformListener listener;
-     tf::StampedTransform transform;
      try{
           listener.transformPointCloud(sonar_link_name, msg, cloud_);
      }

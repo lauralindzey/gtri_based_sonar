@@ -111,9 +111,9 @@ void ImagingSonar::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
           this->cloud_topic_name_ = "";
      }
 
-     std::string image_topic_name = "";
+     this->image_topic_name_ = "";
      if (_sdf->HasElement("imageTopicName"))
-          image_topic_name = _sdf->GetElement("imageTopicName")->Get<std::string>();
+          this->image_topic_name_ = _sdf->GetElement("imageTopicName")->Get<std::string>();
      else
           ROS_FATAL_STREAM("imageTopicName is required.");
 
@@ -223,7 +223,6 @@ void ImagingSonar::LaserDisconnect()
 /////////////////////////////////////////////////
 void ImagingSonar::OnNewLaserScans()
 {
-     cout << "onNewLaserScans*********************\n";
      if (this->cloud_topic_name_ != "") {
           common::Time sensor_update_time = this->parent_sensor_->LastUpdateTime();
           if (last_update_time_ < sensor_update_time) {
@@ -464,7 +463,7 @@ void ImagingSonar::PutLaserData(common::Time &_updateTime)
      this->point_cloud_pub_.publish(this->cloud_msg_);
 
      // publish image from cloud_msg_
-     publish_cloud_to_image(cloud_msg_, this->camera_info_pub_, this->image_pub_);
+     publish_cloud_to_image(this->cloud_msg_, this->camera_info_pub_, this->image_pub_);
 }
 
 // Custom Callback Queue
