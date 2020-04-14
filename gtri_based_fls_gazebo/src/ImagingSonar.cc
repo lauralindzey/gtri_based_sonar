@@ -107,27 +107,31 @@ void ImagingSonar::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
           this->cloud_topic_name_ = _sdf->GetElement("cloudTopicName")->Get<std::string>();
      else
      {
-          ROS_INFO("Block laser plugin missing <cloudTopicName>");
+          ROS_FATAL_STREAM("Block laser plugin missing <cloudTopicName>");
           this->cloud_topic_name_ = "gtri_based_cloud";
      }
 
      if (_sdf->HasElement("imageTopicName"))
           this->image_topic_name_ = _sdf->GetElement("imageTopicName")->Get<std::string>();
      else
-          ROS_INFO("Block laser plugin missing <imageTopicName>");
+     {
+          ROS_FATAL_STREAM("Block laser plugin missing <imageTopicName>");
           this->image_topic_name_ = "gtri_based_image";
+     }
 
      if (_sdf->HasElement("imageCameraInfoTopicName"))
           this->image_camera_info_topic_name_ = _sdf->GetElement("imageCameraInfoTopicName")->Get<std::string>();
      else
-          ROS_INFO("Block laser plugin missing <imageCameraInfoTopicName>");
+     {
+          ROS_FATAL_STREAM("Block laser plugin missing <imageCameraInfoTopicName>");
           this->image_camera_info_topic_name_ = "gtri_based_fls_image_camera_info";
+     }
 
      if (_sdf->HasElement("updateRate"))
           this->update_rate_ = _sdf->GetElement("updateRate")->Get<double>();
      else
      {
-          ROS_INFO("Block laser plugin missing <updateRate>, defaults to 0");
+          ROS_FATAL_STREAM("Block laser plugin missing <updateRate>, defaults to 0");
           this->update_rate_ = 0;
      }
      // FIXME:  update_rate_ is not used.  Find and fix hardcoded rate.
@@ -207,6 +211,8 @@ void ImagingSonar::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
      this->callback_laser_queue_thread_ = boost::thread( boost::bind( &ImagingSonar::LaserQueueThread,this ) );
 
      cout << "cloud topic name: " << this->cloud_topic_name_ << endl;
+     cout << "image topic name: " << this->image_topic_name_ << endl;
+     cout << "image camera info topic name: " << this->image_camera_info_topic_name_ << endl;
      cout << "update rate: " << this->update_rate_ << endl;
      cout << "frame name: " << this->frame_name_ << endl;
      cout << "=== Initializing cloud_to_image ===" << endl;

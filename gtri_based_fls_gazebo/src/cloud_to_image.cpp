@@ -98,8 +98,6 @@ void add_salt_and_pepper(cv::Mat& I, int amt)
      }}
 }
 
-
-std::string image_topic_name = "";
 double min_angle_ = -1;
 double max_angle_ = 1;
 double beam_width_;
@@ -420,18 +418,10 @@ void init_cloud_to_image(ros::NodeHandle* n_, const sdf::ElementPtr _sdf)
      else
           ROS_FATAL_STREAM("imageOutputDir is required.");
 
+     beam_width_ = max_angle_ * 2;
 
      cout << "Min Angle: " << min_angle_ << endl;
      cout << "Max Angle: " << max_angle_ << endl;
-     beam_width_ = max_angle_ * 2;
-
-/* zz??
-     // Setup sonar_image publication
-     image_transport::ImageTransport it_(*n_);
-     img_pub_ = it_.advertise(image_topic_name, 1);
-*/
-
-     cout << "image topic name: " << image_topic_name << endl;
      cout << "sonar link name: " << sonar_link_name << endl;
      cout << "output directory: " << output_dir << endl;
 
