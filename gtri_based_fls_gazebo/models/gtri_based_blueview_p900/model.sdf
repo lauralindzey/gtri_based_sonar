@@ -73,6 +73,7 @@
           <frameName>sonar_link</frameName>
           <cloudTopicName>sonar_cloud</cloudTopicName>
           <imageTopicName>sonar_image</imageTopicName>
+          <imageCameraInfoTopicName>gtri_based_fls_image_camera_info</imageCameraInfoTopicName>
           <horizontalMinAngle>-0.39269875</horizontalMinAngle>
           <horizontalMaxAngle>0.39269875</horizontalMaxAngle>
           <imageOutputDir>/tmp</imageOutputDir>

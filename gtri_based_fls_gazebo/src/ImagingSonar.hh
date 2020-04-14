@@ -82,7 +82,7 @@ namespace gazebo
     private: std::string cloud_topic_name_;
 
           /// \brief camera info topic name
-    private: std::string camera_info_topic_name_;
+    private: std::string image_camera_info_topic_name_;
 
           /// \brief camera image topic name
     private: std::string image_topic_name_;

@@ -405,11 +405,6 @@ void init_cloud_to_image(ros::NodeHandle* n_, const sdf::ElementPtr _sdf)
      else
           ROS_FATAL_STREAM("linkName is required.");
 
-     if (_sdf->HasElement("imageTopicName"))
-          image_topic_name = _sdf->GetElement("imageTopicName")->Get<std::string>();
-     else
-          ROS_FATAL_STREAM("imageTopicName is required.");
-
      if (_sdf->HasElement("horizontalMinAngle"))
           min_angle_ = _sdf->GetElement("horizontalMinAngle")->Get<double>();
      else

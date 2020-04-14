@@ -108,15 +108,20 @@ void ImagingSonar::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
      else
      {
           ROS_INFO("Block laser plugin missing <cloudTopicName>");
-          this->cloud_topic_name_ = "";
+          this->cloud_topic_name_ = "gtri_based_cloud";
      }
 
-     this->image_topic_name_ = "";
      if (_sdf->HasElement("imageTopicName"))
           this->image_topic_name_ = _sdf->GetElement("imageTopicName")->Get<std::string>();
      else
-          ROS_FATAL_STREAM("imageTopicName is required.");
+          ROS_INFO("Block laser plugin missing <imageTopicName>");
+          this->image_topic_name_ = "gtri_based_image";
 
+     if (_sdf->HasElement("imageCameraInfoTopicName"))
+          this->image_camera_info_topic_name_ = _sdf->GetElement("imageCameraInfoTopicName")->Get<std::string>();
+     else
+          ROS_INFO("Block laser plugin missing <imageCameraInfoTopicName>");
+          this->image_camera_info_topic_name_ = "gtri_based_fls_image_camera_info";
 
      if (_sdf->HasElement("updateRate"))
           this->update_rate_ = _sdf->GetElement("updateRate")->Get<double>();
@@ -125,7 +130,7 @@ void ImagingSonar::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
           ROS_INFO("Block laser plugin missing <updateRate>, defaults to 0");
           this->update_rate_ = 0;
      }
-     // FIXME:  update the update_rate_
+     // FIXME:  update_rate_ is not used.  Find and fix hardcoded rate.
 
      // Make sure the ROS node for Gazebo has already been initialized
      if (!ros::isInitialized())
@@ -163,13 +168,21 @@ void ImagingSonar::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
           return;
      }
 
-     // camera info topic "camera_info"
+     // camera info topic "image_camera_info"
+     if (this->image_camera_info_topic_name_ != "")
+     {
      // Custom Callback Queue
-     ros::AdvertiseOptions ao = ros::AdvertiseOptions::create<sensor_msgs::CameraInfo>(
-               this->camera_info_topic_name_,1,
+          ros::AdvertiseOptions ao = ros::AdvertiseOptions::create<sensor_msgs::CameraInfo>(
+               this->image_camera_info_topic_name_,1,
                boost::bind( &ImagingSonar::LaserConnect,this),
                boost::bind( &ImagingSonar::LaserDisconnect,this), ros::VoidPtr(), &this->laser_queue_);
-     this->camera_info_pub_ = this->rosnode_->advertise(ao);
+          this->camera_info_pub_ = this->rosnode_->advertise(ao);
+     }
+     else
+     {
+          ROS_FATAL_STREAM("Image camera info topic name is not defined.");
+          return;
+     }
 
      // image topic
      if (this->image_topic_name_ != "")
