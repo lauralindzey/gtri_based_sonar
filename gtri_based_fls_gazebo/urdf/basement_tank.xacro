@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="basement_tank">
+    <link name='basement_tank'>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1"/>
+        <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1" />
+      </inertial>
+ 
+      <collision name='bottom'>
+        <gazebo>
+          <laser_retro>0.50</laser_retro>
+        </gazebo>
+        <origin xyz="2.135 3.27 0.005" rpy="0 0 0"/>
+        <geometry>
+          <box size="4.27 6.54 0.01"/>
+        </geometry>
+      </collision>
+      <visual name='visual1'>
+        <origin xyz="2.135 3.27 0.005" rpy="0 0 0"/>
+        <geometry>
+          <box size="4.27 6.54 0.01"/>
+        </geometry>
+        <material name="white">
+          <color rgba="1.0 1.0 1.0 1.0"/>
+        </material>
+      </visual>
+
+      <collision name='left_side'>
+        <gazebo>
+          <laserRetro>0.6</laserRetro>
+        </gazebo>
+        <origin xyz="-0.005 3.27 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.01 6.54 2.24"/>
+        </geometry>
+      </collision>
+      <visual name='visual2'>
+        <origin xyz="-0.005 3.27 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.01 6.54 2.24"/>
+        </geometry>
+        <material name="white"/>
+      </visual>
+
+      <collision name='right_side'>
+        <gazebo>
+          <laser_retro>50</laser_retro>
+        </gazebo>
+        <origin xyz="4.275 3.27 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.01 6.54 2.24"/>
+        </geometry>
+      </collision>
+      <visual name='visual3'>
+        <origin xyz="4.275 3.27 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.01 6.54 2.24"/>
+        </geometry>
+        <material name="white"/>
+      </visual>
+
+      <collision name='front_side'>
+        <gazebo>
+          <laser_retro>50</laser_retro>
+        </gazebo>
+        <origin xyz="2.135 -0.005 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="4.27 0.01 2.24"/>
+        </geometry>
+      </collision>
+      <visual name='visual4'>
+        <origin xyz="2.135 -0.005 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="4.27 0.01 2.24"/>
+        </geometry>
+        <material name="white"/>
+      </visual>
+
+      <collision name='back_side'>
+        <gazebo>
+          <laser_retro>50</laser_retro>
+        </gazebo>
+        <origin xyz="2.135 6.545 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="4.27 0.01 2.24"/>
+        </geometry>
+      </collision>
+      <visual name='visual5'>
+        <origin xyz="2.135 6.545 1.12" rpy="0 0 0"/>
+        <geometry>
+          <box size="4.27 0.01 2.24"/>
+        </geometry>
+        <material name="white"/>
+      </visual>
+
+    </link>
+  </xacro:macro>
+</robot>
+

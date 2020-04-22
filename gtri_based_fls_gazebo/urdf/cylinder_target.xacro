@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <material name="grey">
+    <color rgba="0.2 0.2 0.8 1.0"/>
+  </material>
+
+  <xacro:macro name="cylinder_target" params="radius length">
+    <link name='cylinder_target'>
+      <inertial>
+        <mass value="1" />
+        <!-- Mark only - based on cylinder -->
+        <inertia ixx="0.145833" ixy="0" ixz="0" iyy="0.145833" iyz="0" izz="0.125" />
+
+      </inertial>
+      <collision name='cylinder'>
+        <laser_retro>255</laser_retro>
+        <geometry>
+          <cylinder radius="${radius}" length="${length}"/>
+        </geometry>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <bounce/>
+          <friction>
+            <torsional>
+              <ode/>
+            </torsional>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='visual'>
+        <geometry>
+          <cylinder radius="${radius}" length="${length}"/>
+        </geometry>
+
+	<material name="blue">
+		<color rgba="0.0 0.1 0.0 1.0"/>
+	</material>
+<!--
+        <material>
+        </material>
+        <material>
+          <script>
+            <name>Gazebo/Grey</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+
+	<material name="grey"/>
+	<material name="blue">
+		<color rgba="0.0 0.1 0.0 1.0"/>
+	</material>
+
+<material>
+  <ambient>0.46 0.46 0.46 1.0</ambient>
+  <diffuse>0.46 0.46 0.46 1.0</diffuse>
+  <specular>0.46 0.46 0.46 1.0</specular>
+  <emissive>0.46 0.46 0.46 1.0</emissive>
+</material>
+-->
+
+      </visual>
+      <self_collide>0</self_collide>
+      <enable_wind>0</enable_wind>
+      <kinematic>0</kinematic>
+    </link>
+
+<!--
+  <gazebo reference="cylinder_target">
+        <material>Gazebo/Blue</material>
+  </gazebo>
+-->
+
+  </xacro:macro>
+</robot>
