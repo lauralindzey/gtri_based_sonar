@@ -5,6 +5,15 @@
     <arg name="world_name" value="$(find gtri_based_fls)/worlds/blueview_basement_cylinder.world"/>
   </include>
 
+<!-- standalone_gtri_based_fls_robot xacro -->
+  <param name="standalone_gtri_based_fls_robot"
+         command="$(find xacro)/xacro '$(find gtri_based_fls)/urdf/standalone_gtri_based_fls_robot.xacro'"/>
+
+<!-- spawn standalone_gtri_based_fls_robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+        respawn="false" output="screen"
+        args="-urdf -model gtri_based_fls_model -param standalone_gtri_based_fls_robot" />
+
   <!-- rqt_image_view for sonar_image -->
   <node name="rqt_image_view_sonar" pkg="rqt_image_view"
         type="rqt_image_view" args="/sonar_image">
