@@ -1,13 +1,20 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="gtri_based_fls">
- 
+  <xacro:macro name="gtri_based_fls" params="namespace suffix parent_link topic *origin">
+
+    <!-- joint to Sonar link -->
+    <joint name="${namespace}_gtri_based_fls${suffix}_joint" type="fixed">
+      <parent link="${parent_link}" />
+      <child link="${namespace}/gtri_based_fls${suffix}_link" />
+      <xacro:insert_block name="origin" />
+    </joint>
+
   <!--
       raycount: number of actual rays used in gazebo
       rangeCount: number of range values made available to user
       If rayCount is less than rangeCount, it will interpolate.
   -->  
-    <link name="gtri_based_fls">
+    <link name="${namespace}/gtri_based_fls${suffix}_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <mass value="1" />
@@ -27,10 +34,9 @@
       </visual>
     </link>
 
-  <gazebo reference="gtri_based_fls">
+  <gazebo reference="${namespace}/gtri_based_fls${suffix}_link">
 
     <selfCollide>false</selfCollide>
-    <turnGravityOff>true</turnGravityOff>
  
     <sensor type="ray" name="ray_sensor">
       <always_on>true</always_on>
@@ -67,11 +73,11 @@
         <plugin name="gazebo_ros_gtri_based_fls_plugin" filename="libgtri_based_fls_plugin.so">
           <alwaysOn>true</alwaysOn>
           <updateRate>30.0</updateRate>
-          <linkName>sonar_link</linkName>
-          <frameName>sonar_link</frameName>
-          <cloudTopicName>sonar_cloud</cloudTopicName>
-          <imageTopicName>sonar_image</imageTopicName>
-          <imageCameraInfoTopicName>sonar_image_camera_info</imageCameraInfoTopicName>
+          <linkName>${namespace}/gtri_based_fls${suffix}_link</linkName>
+          <frameName>${namespace}/gtri_based_fls${suffix}_link</frameName>
+          <cloudTopicName>${topic}${suffix}_cloud</cloudTopicName>
+          <imageTopicName>${topic}${suffix}_image</imageTopicName>
+          <imageCameraInfoTopicName>${topic}${suffix}_image_camera_info</imageCameraInfoTopicName>
           <horizontalMinAngle>-0.39269875</horizontalMinAngle>
           <horizontalMaxAngle>0.39269875</horizontalMaxAngle>
           <imageOutputDir>/tmp</imageOutputDir>

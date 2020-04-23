@@ -16,7 +16,7 @@
 
   <!-- rqt_image_view for sonar_image -->
   <node name="rqt_image_view_sonar" pkg="rqt_image_view"
-        type="rqt_image_view" args="/sonar_image">
+        type="rqt_image_view" args="/gtri_based_fls1_image">
   </node>
 
 </launch>
