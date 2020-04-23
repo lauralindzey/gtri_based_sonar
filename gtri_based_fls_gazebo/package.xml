@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gtri_based_fls</name>
+  <version>0.0.1</version>
+  <description>The gtri_based_fls_gazebo package</description>
+  <maintainer email="bdallen@nps.edu">Bruce Allen</maintainer>
+  <maintainer email="syllogismrxs@todo.todo">syllogismrxs</maintainer>
+  <author email="bdallen@nps.edu">Bruce Allen</author>
+  <license>Apache-2.0</license>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>gazebo_ros</depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+  <depend>opencv3</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf</depend>
+  <depend>pcl_ros</depend>
+  <depend>cmake_modules</depend>
+
+  <depend>gazebo_dev</depend>
+
+  <export>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+    <gazebo_ros gazebo_media_path="${prefix}"/>
+  </export>
+</package>

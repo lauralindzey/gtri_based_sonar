@@ -3,3 +3,5 @@ catkin_ws/devel/
 
 build
 setenv.sh
+
+*.swp

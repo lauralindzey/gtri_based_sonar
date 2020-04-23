@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot name="standalone_gtri_based_fls_robot"
+       xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find gtri_based_fls)/urdf/gtri_based_fls.xacro" />
+
+  <link name="world"/>
+
+  <xacro:gtri_based_fls
+            namespace="standalone_gtri_based_fls_robot"
+            suffix="1"
+            parent_link="world"
+            topic="gtri_based_fls">
+    <origin xyz="2.1 1.0 1.0" rpy="0 0 1.5709"/>
+  </xacro:gtri_based_fls>
+
+</robot>
+
