@@ -19,5 +19,8 @@
         type="rqt_image_view" args="/gtri_based_fls1_image">
   </node>
 
+  <!-- RViz cloud view -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find gtri_based_fls)/rviz/standalone.rviz" />
+
 </launch>
 
