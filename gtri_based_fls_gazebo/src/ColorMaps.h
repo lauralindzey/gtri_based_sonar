@@ -2,8 +2,11 @@
 #define _COLORMAPS_
 
 // OpenCV headers
-#include <cv.h>
-#include <highgui.h>
+// Updating for Noetic
+// #include <cv.h>
+// #include <highgui.h>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
 
 //#include <opencv2/contrib/contrib.hpp>
 #include <opencv2/core/core.hpp>

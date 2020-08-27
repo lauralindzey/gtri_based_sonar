@@ -15,8 +15,13 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <image_transport/image_transport.h>
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+
+// Trying to make it build in Noetic
+//#include <opencv/cv.h>
+//#include <opencv/highgui.h>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/image_encodings.h>
