@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(gtri_based_fls)
 
+# If running on focal, will be using Noetic + Gazebo11, which requires c++17
+execute_process(COMMAND lsb_release -cs
+  OUTPUT_VARIABLE RELEASE_CODENAME
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+if(RELEASE_CODENAME MATCHES "focal")
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+else()
+  add_compile_options(-std=c++11)
+endif()
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -17,8 +29,8 @@ find_package(gazebo REQUIRED)
 find_package(OpenCV)
 include_directories(
   ${OpenCV_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIR} 
-  ${catkin_INCLUDE_DIRS} 
+  ${Boost_INCLUDE_DIR}
+  ${catkin_INCLUDE_DIRS}
   ${GAZEBO_INCLUDE_DIRS}
 )
 link_directories(${GAZEBO_LIBRARY_DIRS})
@@ -37,7 +49,7 @@ add_library(color_maps src/ColorMaps.cpp)
 
 target_link_libraries(gtri_based_fls_plugin
   cloud_to_image color_maps
-  ${catkin_LIBRARIES} 
+  ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
   ${GAZEBO_LIBRARIES}
   )
