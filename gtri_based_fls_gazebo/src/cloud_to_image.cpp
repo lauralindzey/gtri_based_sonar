@@ -15,8 +15,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <image_transport/image_transport.h>
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/image_encodings.h>
