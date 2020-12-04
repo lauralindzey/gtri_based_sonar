@@ -5,7 +5,7 @@ if(NOT "${CMAKE_VERSION}" VERSION_LESS "3.16")
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 else()
-    set(LOCAL_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    add_compile_options(-std=c++11)
 endif()
 
 find_package(catkin REQUIRED COMPONENTS
@@ -39,12 +39,6 @@ DEPENDS
 add_library(gtri_based_fls_plugin src/ImagingSonar.cc)
 
 add_library(cloud_to_image src/cloud_to_image.cpp)
-set_target_properties(
-  cloud_to_image
-  PROPERTIES
-  COMPILE_FLAGS
-  "${LOCAL_CXX_FLAGS}"
-)
 
 add_library(color_maps src/ColorMaps.cpp)
 
